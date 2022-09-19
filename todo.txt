@@ -1,0 +1,15 @@
+[] finish results bar modal css
+[-] make details modal 'x' not affected by background shadow
+[] add images to details modal
+[x] add pin image to top of details modals
+[] allow using arrow keys to select autocomplete options
+[x] fix not being able to select stuff on details modal
+[] close search box when clicking away
+[] don't allow manipulating the map while the details modal is open
+[-] consider being able to close the details modal by clicking away
+[] smoothen the transitions when bringing up windows
+[] consider a way to remove the marker
+[] fix website button
+[] document code 
+[] xc: implement a traffic chart in the details modal with chart.js  
+[] clean up old github repo and create new one
