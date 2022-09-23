@@ -1,7 +1,5 @@
-// Taken from: https://markus.oberlehner.net/blog/using-the-google-maps-api-with-vue/
+// Copied from: https://markus.oberlehner.net/blog/using-the-google-maps-api-with-vue/
 
-// Your personal API key.
-// Get it here: https://console.cloud.google.com/google/maps-apis
 const API_KEY = 'AIzaSyCVR5g_3-ERrYTJqtIibJmzYRKKBo43WPw';
 const CALLBACK_NAME = 'gmapsCallback';
 

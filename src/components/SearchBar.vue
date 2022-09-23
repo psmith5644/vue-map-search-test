@@ -1,59 +1,67 @@
 <template>
-    <div class="overlay rounded shadow" id="searchBar">
+    <div class="overlay rounded shadow-lg" id="searchBar">
+
         <form @submit.prevent="onSubmit" class="d-flex" role="search">
-            <input v-model="searchQuery" @focus="showResults" id="searchInput"
-                class="form-control shadow-none" type="search" placeholder="Search..." aria-label="Search">
+            <input v-model="searchQuery" id="searchInput" @keyup.enter="onSubmit"
+                class="form-control shadow-none" type="search" placeholder="Search..." aria-label="Search"
+                name="field" autocomplete="off" ref="SearchBarInput">
         </form>
-        <div>
-            <AutoCompleteList v-if="searchQuery !== '' && boolShowList" :searchQuery="searchQuery"></AutoCompleteList>
-        </div>
-            
-        <ResultFoundBar v-if="boolShowResultFoundBar" :placeInfo="this.placeInfo"/>
+
+        <ResultsDisplay v-show="searchQuery !== ''" :searchQuery="searchQuery" :place="this.place"
+            ref="ResultsDisplay"/>
 
     </div>
 </template>
 
 <script>
-import AutoCompleteList from "./AutoCompleteList.vue";
-import ResultFoundBar from "./ResultFoundBar.vue";
+import ResultsDisplay from "./ResultsDisplay.vue";
 
     export default {
     name: "SearchBar",
     data() {
         return {
             searchQuery: "",
-            boolShowList: true,
-            boolShowResultFoundBar: false,
-            placeInfo: null
+            place: null
         };
     },
     emits: ['clickedSearchResult'],
     methods: {
+        /**
+         * Handles hitting the 'enter' key while searching
+         * by going to the matching result if one exists
+         */
         onSubmit() {
-            // TODO: Show results
+            const filteredResults = this.$refs.ResultsDisplay.filteredResults;
+            for (const result of filteredResults) {
+                if (result.name.toLowerCase() == this.searchQuery.toLowerCase().trim()) {
+                    this.$parent.goToSearchResult(result);
+                }
+            }
         },
-        hideResults() {
-            console.log("hiding search results");
-            this.boolShowList = false;
+        /**
+         * populates the search input with the full name of the place.
+         * @param {Object} place 
+         */
+        fillInputWithResult(place) {
+            this.searchQuery = place.name
         },
-        fillInputWithResult(placeInfo) {
-            console.log("filling the input with the result");
-            this.searchQuery = placeInfo.name
+        /**
+         * Reveals the details modal for the given place
+         * @param {Object} place 
+         */
+        displayResultsDisplay(place) {
+            this.fillInputWithResult(place);
+            this.place = place;
         },
-        displayResultFoundBar(placeInfo) {
-            this.hideResults();
-            this.fillInputWithResult(placeInfo);
-            this.boolShowResultFoundBar = true;
-            this.placeInfo = placeInfo;
-        },
-        showResults() {
-            console.log("showing search results and hiding result bar");
-            this.boolShowList = true;
-            this.boolShowResultFoundBar = false;
-        }
-
     },
-    components: { AutoCompleteList, ResultFoundBar, },
+    components: { ResultsDisplay, },
+    /**
+     * Starts the page with the search input focused.
+     */
+    mounted() {
+        this.$refs.SearchBarInput.focus();
+    },
+
 }
 </script>
 
@@ -71,5 +79,7 @@ import ResultFoundBar from "./ResultFoundBar.vue";
         top: 8px;
         left: 8px;
         width: 25%;
+        max-width: 400px;
+        min-width: 200px;
     }
 </style>

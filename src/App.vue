@@ -1,12 +1,13 @@
 <template>
-  <GoogleMap @clickedMarker="(placeInfo) => displayLocationModal(placeInfo)" 
-    ref="GoogleMap" />
+  <GoogleMap @clickedMarker="(place) => displayLocationModal(place)" 
+    ref="GoogleMap"/>
 
-  <SearchBar @clickedSearchResult="(placeInfo) => goToSearchResult(placeInfo)" 
+  <SearchBar @clickedSearchResult="(place) => goToSearchResult(place)" 
     ref="SearchBar"/> 
 
-  <DetailsModal :placeInfo="this.placeInfo" 
+  <DetailsModal :place="this.place" 
     v-if="boolDisplayLocationModal" @closeDetailsModal="hideLocationModal"/>
+
 </template>
 
 <script>
@@ -24,24 +25,32 @@ export default {
   data() {
     return {
       boolDisplayLocationModal: false,
-      placeInfo: null,
-      boolShowResultsFoundBar: false   
+      place: null,
     }
   },
   methods: {
-    displayLocationModal(placeInfo) {
-      console.log("displaying the place modal");
-      this.placeInfo = placeInfo;
+    /**
+     * Displays the details modal for the given place
+     * @param {Object} place - all data about a place 
+     */
+    displayLocationModal(place) {
+      this.place = place;
       this.boolDisplayLocationModal = true;
-      this.$refs.GoogleMap
     },
+    /**
+     * Closes the details modal
+     */
     hideLocationModal() {
-      console.log("hiding place modal");
       this.boolDisplayLocationModal = false;
     },
-    goToSearchResult(placeInfo) {
-      this.$refs.GoogleMap.createMarker(placeInfo);
-      this.$refs.SearchBar.displayResultFoundBar(placeInfo);
+    /**
+     * Calls methods in children components to create a map marker
+     * and populate the search input with the result
+     * @param {Object} place 
+     */
+    goToSearchResult(place) {
+      this.$refs.GoogleMap.createMarker(place);
+      this.$refs.SearchBar.displayResultsDisplay(place);
     },
   },
 }

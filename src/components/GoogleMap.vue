@@ -1,4 +1,4 @@
-<!-- Taken from: https://markus.oberlehner.net/blog/using-the-google-maps-api-with-vue/ -->
+<!-- Copied from: https://markus.oberlehner.net/blog/using-the-google-maps-api-with-vue/ -->
 
 <template>
     <div class="GMap"></div>
@@ -19,40 +19,51 @@ import {toRaw} from 'vue'
       },
       emits: ['clickedMarker'],
       methods: {
-        createMarker(placeInfo) {
+        /**
+         * Creates a clickable location marker for the provided place
+         * and pans the map to the marker.  Clicking the marker
+         * displays the details modal for that location.
+         * @param {Object} place - all data about a place
+         */
+        createMarker(place) {
           
           if (this.marker !== null) {
             this.deleteMarker();
           }
           
-          console.log("Creating marker");
-          const position = {lat: placeInfo.location.lat, lng: placeInfo.location.lon};
+          const position = {lat: place.location.lat, lng: place.location.lon};
           this.marker = new this.google.maps.Marker({
             position: position,
             map: this.map
           });
-
-
-          this.map.setCenter(position);
-          this.map.setZoom(12);
+          
+          // zoom in to the marker, but not out.
+          this.map.panTo(position);
+          if (this.map.zoom < 15) {
+            this.map.setZoom(15);
+          }
 
           this.marker.addListener("click", () => {
-            this.$emit('clickedMarker', placeInfo);
+            this.$emit('clickedMarker', place);
           })
         },
 
+        /**
+         * When a new marker is created, the previous one is deleted.
+         */
         deleteMarker() {
-          console.log("deleting marker")
           let marker = toRaw(this.marker)
           marker.setMap(null)
           marker = null
         },
 
       },
+      /**
+       * Creates the map and centers it on Boston
+       */
       async mounted() {
         try {
           this.google = await gmapsInit();
-          const geocoder = new this.google.maps.Geocoder();
           this.map = new this.google.maps.Map(this.$el, {
             fullscreenControl: false,
             mapTypeControl: false,
@@ -60,15 +71,11 @@ import {toRaw} from 'vue'
           });
 
 
-    
-          geocoder.geocode({ address: 'Austria' }, (results, status) => {
-            if (status !== 'OK' || !results[0]) {
-              throw new Error(status);
-            }
-    
-            this.map.setCenter(results[0].geometry.location);
-            this.map.fitBounds(results[0].geometry.viewport);
-          });
+          const starting_location = { lat: 42.34579953107398, lng: -71.04759111555833 }
+          this.map.setCenter(starting_location);
+          this.map.setZoom(15);
+
+
         } catch (error) {
           console.error(error);
         }
@@ -87,5 +94,5 @@ import {toRaw} from 'vue'
     .GMap {
       width: 100vw;
       height: 100vh;
-      }
+    }
     </style>

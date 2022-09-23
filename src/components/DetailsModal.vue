@@ -1,60 +1,104 @@
+<!-- The DetailsModal displays details about a place when a marker for that place is clicked. -->
 <template>
-    <div class="overlay center rounded" id="detailsModal">
-        <div class="clearfix" id="detailsModalHead">
-            <div class="inline" id="modalHeadText">
-                <img class="inline clearfix" id="pin" src="../../public/images/map-marker-2-xxl.png"/>
-                <div class="inline" style="padding-left: 0;">
-                    <div id="detailsTitle">{{this.placeInfo.name}}</div>
-                    <div id="detailsCoords">{{this.placeInfo.location.lat}}, {{this.placeInfo.location.lon}}</div>
+    <div id="detailsModalContainer">
+        <div class="overlay center rounded" id="detailsModal">
+            <div class="clearfix" id="detailsModalHead">
+                <div class="inline" id="modalHeadText">
+                    <img class="inline clearfix" id="pin" src="../../public/images/map-marker-2-xxl.png"/>
+                    <div class="inline" style="padding-left: 0;">
+                        <div id="detailsTitle">{{this.place.name}}</div>
+                        <div id="detailsCoords">{{this.place.location.lat}}, {{this.place.location.lon}}</div>
+                    </div>
                 </div>
+                <button class="rounded bold" id="websiteButton" 
+                    v-if="hasWebsite()" @click="clickButtonWebsite">
+                    Visit Website
+                </button>
+    
             </div>
-            <button class="rounded" id="websiteButton" @click="buttonWebsite">
-                Visit Website
-            </button>
+            <div class="clearfix" id="detailsModalBody">
+                <div v-if="hasDescription()">{{this.place.details.description}}</div>
+                <div v-else id="noDescription">No Description</div>
+                <div class="clearfix" id="imageContainer">
+                    <img v-for="imageLink in images" class="" id="modalImages" :src="imageLink" :key="imageLink"
+                        @error="errorLoadingImage()"/>
+                </div>  
+            </div>
         </div>
-        <div class="clearfix" id="detailsModalBody">
-            <div v-if="hasDescription">{{this.placeInfo.details.description}}</div>
-            <div v-else>No Description</div>
-            <div class="clearfix" id="images">
-                <img class="inline" id="modalImages" src="../../public/images/icon-pin.svg"/>
-                <img class="inline" id="modalImages" src="../../public/images/icon-pin.svg"/>
-                <img class="inline" id="modalImages" src="../../public/images/icon-pin.svg"/>
-            </div>  
-        </div>
+        <button class="btn-close" id="detailsModalExit" @click="this.$emit('closeDetailsModal')" ></button>
+
     </div>
-    <button class="btn-close" id="detailsModalExit" @click="this.$emit('closeDetailsModal')"></button>
 </template>
 
 <script>
     export default {
+        data() {
+            return {
+                images: []
+            }
+        },
         props: {
-            placeInfo: Object
+            place: Object,
         },
         emits: ['closeDetailsModal'],
         methods: {
+            /**
+             * @return {Boolean} - true if the place has a website
+             */
             hasWebsite() {
-                if ('details' in this.placeInfo && 'website' in this.placeInfo.details) {
+                if ('details' in this.place && 'website' in this.place.details) {
                     return true;
                 }
                 return false;
             },
+            /**
+             * @return {Boolean} - true if the place has a description
+             */
             hasDescription() {
-                if ('details' in this.placeInfo && 'description' in this.placeInfo.details) {
+                if ('details' in this.place && 'description' in this.place.details) {
                     return true;
                 }
                 return false;
             },
-            buttonWebsite() {
-                console.log("opening new window to website")
-                window.open(this.placeInfo.details.website, "_blank");
+
+            /**
+             * When the 'visit website' button is pressed, opens a new tab with link to the website.
+             * Note: hard-coded the link because the links in the sample data don't work
+             * because they use https instead of http
+             */
+            clickButtonWebsite() {
+                window.open("http://groundsignal.com", "_blank");
+            },
+            
+            /**
+             * @return {String[]} - a list of links to a place's images 
+             */
+            getImages() {
+                if ('images' in this.place) {
+                    this.images = this.place.images
+                } else {
+                    this.images = []
+                }
+            },
+            /**
+             * Called when an image fails to load.
+             * Removes the image from the list of images being displayed.
+             * @param {String} imageURL 
+             */
+            errorLoadingImage(imageURL) {
+                console.log("error loading image")
+                this.images.splice(this.images.indexOf(imageURL), 1)
             }
         },
+        mounted() {
+            this.getImages();
+        }
     }
 </script>
 
 <style>
     .rounded {
-        border-radius:2px;
+        border-radius:1px;
         border-width: 1px;
     }
     
@@ -73,13 +117,14 @@
         right: 0;
         top: 0;
         bottom: 0;
-        width: 25%;
+        width: 35%;
         min-width: 300px;
-        height: 35%;
+        max-width: 600px;
+        height: 40%;
         background-color: white;
         box-shadow: 0 0 0 100vmax rgba(0,0,0,.6);
-        /* pointer-events: none; */
     }
+
 
     #detailsModalHead {
         border-bottom: 2px solid lightgrey;
@@ -89,12 +134,14 @@
 
     #detailsModalBody {
         padding: 8px;
-        text-align: left
+        text-align: left;
+        color: black;
     }
 
     #detailsTitle {
         text-align: left;
         font-weight: bold;
+        font-size: 1em;
     }
 
     #detailsCoords {
@@ -115,6 +162,8 @@
 
     #websiteButton {
         padding: 8px;
+        padding-left: 16px;
+        padding-right: 16px;
         background-color: rgb(75, 133, 226);
         margin-left: auto;
         border-width: 0;
@@ -128,13 +177,19 @@
     }
 
     #modalImages {
-        float: left;
         max-width: 30%;
+        margin: 8px;
     }
     
-    #images {
+    #imageContainer {
         position: absolute;
         bottom: 8px;
+        left: 8px;
+        right: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        margin: auto;
     }
 
     #modalHeadText {
@@ -147,12 +202,24 @@
         position: absolute;
         top: 50px;
         right: 50px;
-        z-index: 200;
+        z-index: 200;   
     }
 
     #pin {
         height: 45px;
         width: 45px;
         margin-right: 0;
+    }
+
+    #noDescription {
+        font-style: italic;
+    }
+
+    #detailsModalContainer {
+        width: 100vw;
+        height: 100vh;
+        position: absolute;
+        top: 0;
+        left: 0;
     }
 </style>

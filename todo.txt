@@ -1,15 +1,52 @@
-[] finish results bar modal css
-[-] make details modal 'x' not affected by background shadow
-[] add images to details modal
+[x] overhaul search component
+[x] get rid of auto suggestions on the search bar
+[x] finish results bar modal css
+[x] correct plurality based on number of results
+[x] put focus on search bar input
+[x] complete images on details modal
+[x] undo: result disappears when clicking result and showing pin
 [x] add pin image to top of details modals
-[] allow using arrow keys to select autocomplete options
 [x] fix not being able to select stuff on details modal
-[] close search box when clicking away
-[] don't allow manipulating the map while the details modal is open
-[-] consider being able to close the details modal by clicking away
-[] smoothen the transitions when bringing up windows
-[] consider a way to remove the marker
-[] fix website button
+[x] don't allow manipulating the map while the details modal is open
+[x] adjust fonts to match example: results and website button are bolded
+[x] widen details modal a little bit
+[x] fix details modal text color
+[x] "" when moving to a new marker
+[x] highlighting when hovering over result
+[x] fix website button
 [] document code 
 [] xc: implement a traffic chart in the details modal with chart.js  
-[] clean up old github repo and create new one
+[x] clean up old github repo 
+[x] consider fixing adjustment of sizing of elements when the window is resized
+[x] fixme: details modal will not open if no website data field
+[x] center starting map over Boston
+[] learn what the imported google maps files are doing well enough to explain it
+    [] start with understanding 'Promises'  
+[x] functionality for enter button in search bar
+[x] rename variables for clarity
+[x] remove console.log statements
+[x] comment code
+[] research Vuex
+[x] check out websocket error - random thing on my end or problem with app?
+[x] fix error on 'enter'
+[x] image error on clems carwash
+[] clean css
+[] search bar needs the little icon on the left
+[] change markers to match the icon
+[] make a data store to simplify the component relationships
+
+-
+[-] make details modal 'x' not affected by background shadow
+[?] allow using arrow keys to select autocomplete options
+[-] smoothen the transitions when bringing up windows
+
+
+
+Notes for README:
+- Vuex was not used, but its use could have simplified some of the relationships between components.
+    - For example, the ResultsDisplay and AutoCompleteList components are separated because I wanted the list to be its own component.
+    This creates a mildly annoying data relationship where I have to use a watcher and an event
+    to pass the list of search results to its parent, the display.  This relationship would have been simpler by storing that data in Vuex store.
+    - There is a click event in SearchResult.vue that emits an event from its great-grandparent.  Would be resolved better with Vuex.
+    - Overall, I don't think Vuex was necessary for this project, but it could have simplified some things.
+- box shadow 

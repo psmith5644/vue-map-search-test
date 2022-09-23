@@ -1,34 +1,49 @@
+<!-- The SearchResult component displays a place's name and coordinates.
+It appears as an item in the ResultsList. -->
 <template>
-    <div class="searchResult" @click="clicked">{{placeInfo.name}}</div>
+    <div class="clearfix" id="searchResult" @click="clicked">
+        <div class="inline" id="modalHeadText">
+            <img class="inline clearfix" id="pinResult" src="../../public/images/map-marker-2-xxl.png"/>
+            <div class="inline" style="padding-left: 0;">
+                <div id="detailsTitle" style="font-size: .75em;">{{this.place.name}}</div>
+                <div id="detailsCoords">{{this.place.location.lat}}, {{this.place.location.lon}}</div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
     export default {
         name: "SearchResult", 
         props: {
-            placeInfo: Object
+            place: Object
         },
         methods: {
+            /**
+             * Tells the SearchBar parent to emit an event when this SearchResult is clicked.
+             */
             clicked() {
-                this.$parent.$parent.$emit('clickedSearchResult', this.placeInfo)
-            }
+                this.$parent.$parent.$parent.$emit('clickedSearchResult', this.place)
+            },
         },
-        components: {
-
-        }
     }
 </script>
 
 <style>
-    .searchResult {
+    #searchResult {
         background-color: white;
-        padding: 8px;
-        border-radius: 2px;
     }
 
-    .searchResult:hover {
-        background-color: lightgrey;
+    #searchResult:hover {
+        background-color: rgb(245, 245, 245);
     }
 
-    
+    #pinResult {
+        height: 45px;
+        width: 45px;
+    }
+
+    #detailsTitle {
+        font-size: .75em;
+    }
 </style>
