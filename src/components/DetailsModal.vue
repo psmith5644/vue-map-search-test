@@ -4,7 +4,7 @@
         <div class="overlay center rounded" id="detailsModal">
             <div class="clearfix" id="detailsModalHead">
                 <div class="inline" id="modalHeadText">
-                    <img class="inline clearfix" id="pin" src="../../public/images/map-marker-2-xxl.png"/>
+                    <img class="inline clearfix" id="pin" src="../../public/images/icon-pin.svg"/>
                     <div class="inline" style="padding-left: 0;">
                         <div id="detailsTitle">{{this.place.name}}</div>
                         <div id="detailsCoords">{{this.place.location.lat}}, {{this.place.location.lon}}</div>

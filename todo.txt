@@ -21,32 +21,21 @@
 [x] fixme: details modal will not open if no website data field
 [x] center starting map over Boston
 [] learn what the imported google maps files are doing well enough to explain it
-    [] start with understanding 'Promises'  
+    [x] start with understanding 'Promises'  
 [x] functionality for enter button in search bar
 [x] rename variables for clarity
 [x] remove console.log statements
 [x] comment code
-[] research Vuex
+[x] research Vuex
 [x] check out websocket error - random thing on my end or problem with app?
 [x] fix error on 'enter'
 [x] image error on clems carwash
-[] clean css
-[] search bar needs the little icon on the left
-[] change markers to match the icon
+[x] clean css
+[x] change markers to match the icon
 [] make a data store to simplify the component relationships
+[x] modify the svg files and use them
+[x] remove the default pins
+[] enable current location marker
 
 -
-[-] make details modal 'x' not affected by background shadow
-[?] allow using arrow keys to select autocomplete options
-[-] smoothen the transitions when bringing up windows
-
-
-
-Notes for README:
-- Vuex was not used, but its use could have simplified some of the relationships between components.
-    - For example, the ResultsDisplay and AutoCompleteList components are separated because I wanted the list to be its own component.
-    This creates a mildly annoying data relationship where I have to use a watcher and an event
-    to pass the list of search results to its parent, the display.  This relationship would have been simpler by storing that data in Vuex store.
-    - There is a click event in SearchResult.vue that emits an event from its great-grandparent.  Would be resolved better with Vuex.
-    - Overall, I don't think Vuex was necessary for this project, but it could have simplified some things.
-- box shadow 
+[] search bar needs the little icon on the left

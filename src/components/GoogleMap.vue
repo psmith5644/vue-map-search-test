@@ -30,12 +30,16 @@ import {toRaw} from 'vue'
           if (this.marker !== null) {
             this.deleteMarker();
           }
-          
+
+
+                    
           const position = {lat: place.location.lat, lng: place.location.lon};
           this.marker = new this.google.maps.Marker({
             position: position,
-            map: this.map
+            map: this.map,
+            icon: 'images/icon-pin.svg',
           });
+          
           
           // zoom in to the marker, but not out.
           this.map.panTo(position);
@@ -62,12 +66,21 @@ import {toRaw} from 'vue'
        * Creates the map and centers it on Boston
        */
       async mounted() {
+        const styles = [{
+          featureType: "poi",
+          elementType: "labels",
+          stylers: [{
+            visibility: "off"
+          }]
+      }];
+
         try {
           this.google = await gmapsInit();
           this.map = new this.google.maps.Map(this.$el, {
             fullscreenControl: false,
             mapTypeControl: false,
-            streetViewControl: false
+            streetViewControl: false,
+            styles: styles,
           });
 
 

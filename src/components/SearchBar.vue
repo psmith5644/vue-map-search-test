@@ -1,10 +1,12 @@
 <template>
     <div class="overlay rounded shadow-lg" id="searchBar">
+        <!-- <img id="searchImage" class="overlay" src="../../public/images/icon-search.svg"/> -->
+        
+        <form @submit.prevent="onSubmit" class="d-flex" role="search" id="searchForm">
 
-        <form @submit.prevent="onSubmit" class="d-flex" role="search">
             <input v-model="searchQuery" id="searchInput" @keyup.enter="onSubmit"
-                class="form-control shadow-none" type="search" placeholder="Search..." aria-label="Search"
-                name="field" autocomplete="off" ref="SearchBarInput">
+            class="form-control shadow-none" type="search" placeholder="Search..." aria-label="Search"
+            name="field" autocomplete="off" ref="SearchBarInput"/>
         </form>
 
         <ResultsDisplay v-show="searchQuery !== ''" :searchQuery="searchQuery" :place="this.place"
@@ -82,4 +84,5 @@ import ResultsDisplay from "./ResultsDisplay.vue";
         max-width: 400px;
         min-width: 200px;
     }
+
 </style>

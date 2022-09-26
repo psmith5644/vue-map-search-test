@@ -48,3 +48,5 @@ ResultsDisplay header.  In case the autocompleting list turned out to be very co
 The main drawback I experienced from having many components is that the data transfer between the components is more involved than if there were fewer components.
 Alternatively, this issue could be solved with the  
 
+The markers for default points of interest have been disabled to de-clutter the map and make the custom location markers clearer.
+

@@ -43,7 +43,7 @@ It's child component, the results list, is displayed below it. -->
     }
 
     #resultHead {
-        background-color: rgb(0, 98, 255);
+        background-color: #4f7dfa;
         color: white;
         border-radius: 3px;
         text-align: left;
@@ -51,24 +51,11 @@ It's child component, the results list, is displayed below it. -->
         font-size: .75em;
     }
 
-    #foundSearchResult {
-        padding-left: 0;
-        padding-bottom: 0;
-    }
-
-    #foundSearchResult:hover {
-        background-color: white;
-    }
-
     #resultBody {
         background-color: white;
         border-radius: 3px;
     }
 
-    #detailsCoords {
-        padding-left: 0;
-        margin-left: 0;
-    }
 
     .bold {
         font-weight: bold;
