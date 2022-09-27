@@ -1,7 +1,7 @@
 <!-- The DetailsModal displays details about a place when a marker for that place is clicked. -->
 <template>
     <div id="detailsModalContainer">
-        <div class="overlay center rounded" id="detailsModal">
+        <div class="overlay center rounded clearfix" id="detailsModal">
             <div class="clearfix" id="detailsModalHead">
                 <div class="inline" id="modalHeadText">
                     <img class="inline clearfix" id="pin" src="../../public/images/icon-pin.svg"/>
@@ -17,11 +17,12 @@
     
             </div>
             <div class="clearfix" id="detailsModalBody">
-                <div v-if="hasDescription()">{{store.place.details.description}}</div>
-                <div v-else id="noDescription">No Description</div>
-                <div class="clearfix" id="imageContainer">
+                <div class="description" v-if="hasDescription()">{{store.place.details.description}}</div>
+                <div class="description" v-else id="noDescription">No Description</div>
+                <TrafficChart id="trafficChart" v-if="trafficDataExists()"/>
+                <div :id="imageContainerID" ref="imageContainer">
                     <img v-for="imageLink in images" class="" id="modalImages" :src="imageLink" :key="imageLink"
-                        @error="errorLoadingImage()"/>
+                    @error="errorLoadingImage()"/>
                 </div>  
             </div>
         </div>
@@ -32,71 +33,83 @@
 
 <script>
 import {store} from '@/store.js'
+import TrafficChart from './TrafficChart.vue';
 
     export default {
-        data() {
-            return {
-                store,
-                images: []
+    data() {
+        return {
+            store,
+            images: [],
+            imageContainerID: "imageContainer"
+        };
+    },
+    emits: ["closeDetailsModal"],
+    methods: {
+        /**
+         * @return {Boolean} - true if the place has a website
+         */
+        hasWebsite() {
+            if ("details" in this.store.place && "website" in this.store.place.details) {
+                return true;
+            }
+            return false;
+        },
+        /**
+         * @return {Boolean} - true if the place has a description
+         */
+        hasDescription() {
+            if ("details" in this.store.place && "description" in this.store.place.details) {
+                return true;
+            }
+            return false;
+        },
+        /**
+         * When the 'visit website' button is pressed, opens a new tab with link to the website.
+         * Note: hard-coded the link because the links in the sample data don't work
+         * because they use https instead of http
+         */
+        clickButtonWebsite() {
+            window.open("http://groundsignal.com", "_blank");
+        },
+        /**
+         * @return {String[]} - a list of links to a place's images
+         */
+        getImages() {
+            if ("images" in store.place) {
+                this.images = this.store.place.images;
+            }
+            else {
+                this.images = [];
             }
         },
-        emits: ['closeDetailsModal'],
-        methods: {
-            /**
-             * @return {Boolean} - true if the place has a website
-             */
-            hasWebsite() {
-                if ('details' in this.store.place && 'website' in this.store.place.details) {
-                    return true;
-                }
-                return false;
-            },
-            /**
-             * @return {Boolean} - true if the place has a description
-             */
-            hasDescription() {
-                if ('details' in this.store.place && 'description' in this.store.place.details) {
-                    return true;
-                }
-                return false;
-            },
-
-            /**
-             * When the 'visit website' button is pressed, opens a new tab with link to the website.
-             * Note: hard-coded the link because the links in the sample data don't work
-             * because they use https instead of http
-             */
-            clickButtonWebsite() {
-                window.open("http://groundsignal.com", "_blank");
-            },
-            
-            /**
-             * @return {String[]} - a list of links to a place's images 
-             */
-            getImages() {
-                if ('images' in store.place) {
-                    this.images = this.store.place.images
-                } else {
-                    this.images = []
-                }
-            },
-            /**
-             * Called when an image fails to load.
-             * Removes the image from the list of images being displayed.
-             * @param {String} imageURL 
-             */
-            errorLoadingImage(imageURL) {
-                console.log("error loading image")
-                this.images.splice(this.images.indexOf(imageURL), 1)
-            }
+        /**
+         * Called when an image fails to load.
+         * Removes the image from the list of images being displayed.
+         * @param {String} imageURL
+         */
+        errorLoadingImage(imageURL) {
+            console.log("error loading image");
+            this.images.splice(this.images.indexOf(imageURL), 1);
         },
-        mounted() {
-            this.getImages();
+        /**
+         * @return {Boolean} - true if traffic data exists for the current place
+         */
+        trafficDataExists() {
+            if ('details' in this.store.place && 'avgStoreTraffic' in this.store.place.details) {
+                return true;
+            }
+            return false;
         }
-    }
+    },
+    created() {
+        this.getImages();
+    },
+    components: { TrafficChart }
+}
 </script>
 
 <style>
+
     .rounded {
         border-radius:1px;
         border-width: 1px;
@@ -120,9 +133,13 @@ import {store} from '@/store.js'
         width: 35%;
         min-width: 300px;
         max-width: 600px;
-        height: 40%;
+        min-height: 30%;
+        height: 45%;
         background-color: white;
         box-shadow: 0 0 0 100vmax rgba(0,0,0,.6);
+
+        overflow:hidden;
+
     }
 
 
@@ -136,6 +153,9 @@ import {store} from '@/store.js'
         padding: 8px;
         text-align: left;
         color: black;
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
     }
 
     #detailsTitle {
@@ -221,5 +241,9 @@ import {store} from '@/store.js'
         position: absolute;
         top: 0;
         left: 0;
+    }
+
+    #trafficChart {
+        margin-top: 20px;
     }
 </style>

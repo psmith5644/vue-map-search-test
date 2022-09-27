@@ -33,11 +33,13 @@
 [x] modify the svg files and use them
 [x] remove the default pins
 [] xc: implement a traffic chart in the details modal with chart.js  
-[] fix box shadow or write about it in documentation
+[] make images and chart adjust for each others' size
 [] learn what the imported google maps files are doing well enough to explain it
+[] document chart file
 [] document code 
 
 -
+[-] fix box shadow or write about it in documentation
 [-] add global event listener
 [?] enable current location marker
 [] search bar needs the little icon on the left

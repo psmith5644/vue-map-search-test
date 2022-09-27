@@ -64,3 +64,5 @@ The markers for default points of interest have been disabled to de-clutter the 
 .. box shadow
 
 .. provide/inject
+
+.. flexibility with box sizing
