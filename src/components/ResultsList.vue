@@ -12,15 +12,14 @@
 <script>
 import * as sampleData from '../../public/sample-data'
 import SearchResult from './SearchResult.vue';
+import {store} from '@/store.js'
 
 export default {
     data() {
         return {
+            store,
             autoCompleteList: sampleData.sampleData
         };
-    },
-    props: {
-       searchQuery: String
     },
     computed: { 
         /**
@@ -28,16 +27,16 @@ export default {
          * A result is shown if it contains the entire search query as a substring.
          */
         filteredResults() {
-            return this.searchQuery == "" 
+            return this.store.searchQuery == "" 
                 ? this.autoCompleteList
                 : this.autoCompleteList.filter((result) => 
-                result.name.toLowerCase().includes(this.searchQuery.toLowerCase()))
+                result.name.toLowerCase().includes(this.store.searchQuery.toLowerCase()))
         }
     },
     emits: ['update:filteredResults'],
     watch: {
-        searchQuery() {
-            this.$emit("update:filteredResults", this.filteredResults)
+        filteredResults() {
+            this.$emit("update:filteredResults", this.filteredResults);
         }
     },
     components: { SearchResult }

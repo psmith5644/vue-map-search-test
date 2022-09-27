@@ -14,13 +14,10 @@
 [x] "" when moving to a new marker
 [x] highlighting when hovering over result
 [x] fix website button
-[] document code 
-[] xc: implement a traffic chart in the details modal with chart.js  
 [x] clean up old github repo 
 [x] consider fixing adjustment of sizing of elements when the window is resized
 [x] fixme: details modal will not open if no website data field
 [x] center starting map over Boston
-[] learn what the imported google maps files are doing well enough to explain it
     [x] start with understanding 'Promises'  
 [x] functionality for enter button in search bar
 [x] rename variables for clarity
@@ -32,10 +29,16 @@
 [x] image error on clems carwash
 [x] clean css
 [x] change markers to match the icon
-[] make a data store to simplify the component relationships
+[x] make a data store to simplify the component relationships
 [x] modify the svg files and use them
 [x] remove the default pins
-[] enable current location marker
+[] xc: implement a traffic chart in the details modal with chart.js  
+[] fix box shadow or write about it in documentation
+[] learn what the imported google maps files are doing well enough to explain it
+[] document code 
 
 -
+[-] add global event listener
+[?] enable current location marker
 [] search bar needs the little icon on the left
+[-] catch the image loading error

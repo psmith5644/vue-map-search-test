@@ -6,8 +6,8 @@
                 <div class="inline" id="modalHeadText">
                     <img class="inline clearfix" id="pin" src="../../public/images/icon-pin.svg"/>
                     <div class="inline" style="padding-left: 0;">
-                        <div id="detailsTitle">{{this.place.name}}</div>
-                        <div id="detailsCoords">{{this.place.location.lat}}, {{this.place.location.lon}}</div>
+                        <div id="detailsTitle">{{store.place.name}}</div>
+                        <div id="detailsCoords">{{store.place.location.lat}}, {{store.place.location.lon}}</div>
                     </div>
                 </div>
                 <button class="rounded bold" id="websiteButton" 
@@ -17,7 +17,7 @@
     
             </div>
             <div class="clearfix" id="detailsModalBody">
-                <div v-if="hasDescription()">{{this.place.details.description}}</div>
+                <div v-if="hasDescription()">{{store.place.details.description}}</div>
                 <div v-else id="noDescription">No Description</div>
                 <div class="clearfix" id="imageContainer">
                     <img v-for="imageLink in images" class="" id="modalImages" :src="imageLink" :key="imageLink"
@@ -31,14 +31,14 @@
 </template>
 
 <script>
+import {store} from '@/store.js'
+
     export default {
         data() {
             return {
+                store,
                 images: []
             }
-        },
-        props: {
-            place: Object,
         },
         emits: ['closeDetailsModal'],
         methods: {
@@ -46,7 +46,7 @@
              * @return {Boolean} - true if the place has a website
              */
             hasWebsite() {
-                if ('details' in this.place && 'website' in this.place.details) {
+                if ('details' in this.store.place && 'website' in this.store.place.details) {
                     return true;
                 }
                 return false;
@@ -55,7 +55,7 @@
              * @return {Boolean} - true if the place has a description
              */
             hasDescription() {
-                if ('details' in this.place && 'description' in this.place.details) {
+                if ('details' in this.store.place && 'description' in this.store.place.details) {
                     return true;
                 }
                 return false;
@@ -74,8 +74,8 @@
              * @return {String[]} - a list of links to a place's images 
              */
             getImages() {
-                if ('images' in this.place) {
-                    this.images = this.place.images
+                if ('images' in store.place) {
+                    this.images = this.store.place.images
                 } else {
                     this.images = []
                 }

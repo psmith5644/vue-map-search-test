@@ -10,7 +10,7 @@ It's child component, the results list, is displayed below it. -->
         </div>
         <!-- Gets the list of search results from the results list so that it can display the number of results. -->
         <div id="resultBody" class="clearfix">
-            <ResultsList :searchQuery="searchQuery" @update:filteredResults="(filteredResults) => this.filteredResults = filteredResults" 
+            <ResultsList @update:filteredResults="(filteredResults) => this.filteredResults = filteredResults" 
                 ref="ResultsList"/>
         </div>
             
@@ -25,10 +25,6 @@ It's child component, the results list, is displayed below it. -->
             return {
                 filteredResults: []
             }
-        },
-        props: {
-            place: null,
-            searchQuery: null,
         },
         components: {
             ResultsList,

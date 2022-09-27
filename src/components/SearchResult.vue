@@ -5,25 +5,34 @@ It appears as an item in the ResultsList. -->
         <div class="inline" id="modalHeadText">
             <img class="inline clearfix" id="pinResult" src="../../public/images/icon-pin.svg"/>
             <div class="inline" style="padding-left: 0;">
-                <div id="detailsTitle" style="font-size: .75em;">{{this.place.name}}</div>
-                <div id="detailsCoords">{{this.place.location.lat}}, {{this.place.location.lon}}</div>
+                <div id="detailsTitle" style="font-size: .75em;">{{place.name}}</div>
+                <div id="detailsCoords">{{place.location.lat}}, {{place.location.lon}}</div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import {store} from '@/store.js'
+
     export default {
         name: "SearchResult", 
-        props: {
-            place: Object
+        data() {
+            return {
+                store,
+            }
         },
+        props: {
+            place: {}
+        },
+        inject: ['goToSearchResult'],
         methods: {
             /**
-             * Tells the SearchBar parent to emit an event when this SearchResult is clicked.
+             * Calls the injected method from the root app to go to the clicked search result.
              */
             clicked() {
-                this.$parent.$parent.$parent.$emit('clickedSearchResult', this.place)
+                store.setPlace(this.place)
+                this.goToSearchResult(store.place)
             },
         },
     }

@@ -1,15 +1,14 @@
 <template>
     <div class="overlay rounded shadow-lg" id="searchBar">
-        <!-- <img id="searchImage" class="overlay" src="../../public/images/icon-search.svg"/> -->
         
         <form @submit.prevent="onSubmit" class="d-flex" role="search" id="searchForm">
 
-            <input v-model="searchQuery" id="searchInput" @keyup.enter="onSubmit"
+            <input v-model="store.searchQuery" id="searchInput" @keyup.enter="onSubmit"
             class="form-control shadow-none" type="search" placeholder="Search..." aria-label="Search"
             name="field" autocomplete="off" ref="SearchBarInput"/>
         </form>
 
-        <ResultsDisplay v-show="searchQuery !== ''" :searchQuery="searchQuery" :place="this.place"
+        <ResultsDisplay v-show="store.searchQuery !== ''"
             ref="ResultsDisplay"/>
 
     </div>
@@ -17,13 +16,13 @@
 
 <script>
 import ResultsDisplay from "./ResultsDisplay.vue";
+import {store} from '@/store.js';
 
     export default {
     name: "SearchBar",
     data() {
         return {
-            searchQuery: "",
-            place: null
+            store
         };
     },
     emits: ['clickedSearchResult'],
@@ -35,7 +34,7 @@ import ResultsDisplay from "./ResultsDisplay.vue";
         onSubmit() {
             const filteredResults = this.$refs.ResultsDisplay.filteredResults;
             for (const result of filteredResults) {
-                if (result.name.toLowerCase() == this.searchQuery.toLowerCase().trim()) {
+                if (result.name.toLowerCase() == this.store.searchQuery.toLowerCase().trim()) {
                     this.$parent.goToSearchResult(result);
                 }
             }
@@ -45,7 +44,7 @@ import ResultsDisplay from "./ResultsDisplay.vue";
          * @param {Object} place 
          */
         fillInputWithResult(place) {
-            this.searchQuery = place.name
+            this.store.searchQuery = place.name
         },
         /**
          * Reveals the details modal for the given place
@@ -53,7 +52,7 @@ import ResultsDisplay from "./ResultsDisplay.vue";
          */
         displayResultsDisplay(place) {
             this.fillInputWithResult(place);
-            this.place = place;
+            this.store.place = place;
         },
     },
     components: { ResultsDisplay, },

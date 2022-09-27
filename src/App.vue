@@ -2,11 +2,9 @@
   <GoogleMap @clickedMarker="(place) => displayLocationModal(place)" 
     ref="GoogleMap"/>
 
-  <SearchBar @clickedSearchResult="(place) => goToSearchResult(place)" 
-    ref="SearchBar"/> 
+  <SearchBar ref="SearchBar"/> 
 
-  <DetailsModal :place="this.place" 
-    v-if="boolDisplayLocationModal" @closeDetailsModal="hideLocationModal"/>
+  <DetailsModal v-if="boolDisplayLocationModal" @closeDetailsModal="hideLocationModal"/>
 
 </template>
 
@@ -26,6 +24,11 @@ export default {
     return {
       boolDisplayLocationModal: false,
       place: null,
+    }
+  },
+  provide() {
+    return {
+      goToSearchResult: this.goToSearchResult
     }
   },
   methods: {

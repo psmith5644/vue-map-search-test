@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import gmapsInit from '../gmaps.js';
+import gmapsInit from '@/gmaps.js';
 import {toRaw} from 'vue'
     
     export default {
