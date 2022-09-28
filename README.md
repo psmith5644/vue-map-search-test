@@ -24,45 +24,67 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## Design Decisions
+
+### Frameworks and libraries
+
 For this test, I used the Vue CLI to create a Vue.js Single Page Application.  
 I've never used Vue before, so I was excited to learn a new framework!
 I initially started configuring an Express server and adding Vue on top of it
 before realizing the backend was unnecessary, and the simplest configuration was to 
 let the Vue CLI handle setting up the SPA.
 
-I used the Bootstrap stylesheet to help with a few elements, although I did the majority of it manually.
+I used Bootstrap's stylesheet to help with the CSS of a few elements, although I did the majority of it manually.
 Initially, I thought using Bootstrap would trivialize the test, 
 so I refrained from using any elements that are entirely from Bootstrap.
-In hindsight, at least ~50% of the time spent on this test was just styling CSS, 
+I spent a large portion of the time spent on this test just styling CSS, 
 so it would have been more sensible to take as many premade elements from Bootstrap as possible.
 
-I was able to implement all of the core features that I wanted to.
-There are a couple of tiny styling things that could be improved that I decided weren't necessary 
-taking the extra time to do, and I'm overall happy with the current state.\
+I used a store in the form of a reactive object in 'store.js' to create a global state and simplfiy some interactions between components. 
+This could be replaced with Pinia, but I decided for the scale of this app that was unnecessary, and using a reactive object works fine.
+For a more complex project or in a production environment I would likely use Pinia; 
+from my cursory research I understand it is a more secure and robust way of implementing a store, but
+for this test I preferred to keep it simple and not use anything that I didn't need to.
 
-I separated elements into components as much as possible.  
-It also would have been reasonable to combine some of the elements relating to the search function into fewer components.
-For example, the ResultsDisplay component is basically just the header for the ResultsList.  
-My thinking was that I wanted the Results List to be its own component to separate its dynamic content from the relatively static
-ResultsDisplay header.  In case the autocompleting list turned out to be very complicated, it would be better to have it isolated in its component.
-The main drawback I experienced from having many nested components is that the data transfer between the components was more involved than if there were fewer components.
-Specifically, there was prop drilling with the search query and 
-when a search result was clicked, the corresponding place object had to be passed up through the deeply nested SearchResult component to the root app through an event before being passed to the details modal
-To resolve these awkward data transfers, a replaced them with a simple reactive object in store.js to store the search query and place object, which are accessed by the components that need them.
-Similar functionality could have been provided with Pinia, but this solution was simple, and for the scale of this task I did not think adding additional libraries was necessary.
-When the search result is clicked, it needs to trigger the "goToSearchResult" method at the root app level.  
-I initially implemented this with an event in great-grandparent of the searchresult component, the search bar, which called a method passing the relevant place object to the root app, which passed it back to the details modal.
-To call that event, the search result needed to go up the ancestor chain by continually referencing "$parent" and emitting the event in "SearchBar.vue"  
-This implementation seemed poor, so I replaced it by providing/injecting the method from the root app level to "SearchResult.vue", where it is then called.
-This also could have been handled with a global event bus or 
+I referred to a [blog](https://markus.oberlehner.net/blog/using-the-google-maps-api-with-vue/) on how to implement
+the Google Maps Javascript API as a Vue.js component to make the map easier to manage.
+
+### Component Communication
+
+I separated elements into components to keep logic separated. I erred on the side of potentially having too many components
+as opposed to having too few.  One benefit of this approach is that the logic of different components is clearly separated.  
+In particular, I wanted to isolate the autocompleting results list from the rest of the search functionality in case that logic became complicated.
+One of the drawbacks of having so many components is that it can make the relationships among components more complex.
+There ended up being some prop drilling: the search query had to be passed from the search bar through the results display to the results list to generate the search results.
+This was not a severe problem but it was a little messy, so I created a store to hold the search query and resolve the prop drilling.
+
+A related issue also occured: after clicking on a Search Result, which is a deeply nested component, the app tells the google map to make a marker corresponding to that place and pan the map to it; 
+it also tells the search bar to populate the input with the full place name.
+Initially, to convey the message to the google map, I used an event to pass the place object to the root app, which then passed it to the google map.  
+However, the event had to be emitted from a direct child of the root app.  So the search result component would call refer to its great grandparent to emit the event like so:
+`this.$parent.$parent.$parent.emit['clickedSearchResult', place]`
+This was clearly a poor and unscalable way to communicate between components.
+One way to solve it would be to use a global event bus so that the search result could emit an event directly to the google map to create the corresponding marker.
+However, my understanding is that global event buses are considered bad practice.  
+I tried having the result component receive the method from the root app that tells the google map to create the marker using the provide/inject syntax.  This works and is a little less messy,
+but is also somewhat confusing because a method at the root app is being called from a deeply nested component, so the logic is in an unexpected place.
+I finally settled on creating a watcher at the app level that detects when the searchResult updates the state in store.js.  When the current place changes, the app detects that and calls the necessary methods.
+I think this is the best solution of the options that I considered because it is the most clear and understandable: it brings all the logic together to the parent, which then calls the appropriate methods in its child components.  
+
+### Potential Improvements
+
+Because this application is obviously not meant for production and is literally called 'front-end', I used as few tools as possible to keep things simple.
+
+If I were developing this application for a production environment, I would prioritize scalibility and reliability more heavily.
+The most basic steps to do this would be to use Pinia for the data store, because it is more robust and reliable.  
+The application also does not have a backend database, because in its current state it has no need for one, 
+but if the application grew to have any more complex features, such as storing users, it would need a database.
+The application would also need a backend framework such as Express.js to handle routing and backend logic.
+
+Aside from the major but currently unnecessary architectural improvements, the only improvements that I would make to the app as it is
+are some small improvemts to the styling.  For example, the traffic chart, implemented with chart.js, was a late addition to the details modal
+and was not properly planned for in the details modal design, so the details modal could use a bit of an overhaul to make sure the chart 
+fits with the rest of the component more reliably and aesthetically.
+
+### Other notes
 
 The markers for default points of interest have been disabled to de-clutter the map and make the custom location markers clearer.
-
-
-... state to simplify interaction and stop prop drilling
-
-.. box shadow
-
-.. provide/inject
-
-.. flexibility with box sizing
