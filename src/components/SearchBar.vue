@@ -46,14 +46,6 @@ import {store} from '@/store.js';
         fillInputWithResult(place) {
             this.store.searchQuery = place.name
         },
-        /**
-         * Reveals the details modal for the given place
-         * @param {Object} place 
-         */
-        displayResultsDisplay(place) {
-            this.fillInputWithResult(place);
-            this.store.place = place;
-        },
     },
     components: { ResultsDisplay, },
     /**

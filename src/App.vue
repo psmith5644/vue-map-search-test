@@ -58,7 +58,7 @@ export default {
      */
     goToSearchResult(place) {
       this.$refs.GoogleMap.createMarker(place);
-      this.$refs.SearchBar.displayResultsDisplay(place);
+      this.$refs.SearchBar.fillInputWithResult(place);
     },
   },
 }
