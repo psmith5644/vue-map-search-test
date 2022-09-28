@@ -57,14 +57,15 @@ This was not a severe problem but it was a little messy, so I created a store to
 A related issue also occured: after clicking on a Search Result, which is a deeply nested component, the app tells the google map to make a marker corresponding to that place and pan the map to it; 
 it also tells the search bar to populate the input with the full place name.
 Initially, to convey the message to the google map, I used an event to pass the place object to the root app, which then passed it to the google map.  
-However, the event had to be emitted from a direct child of the root app.  So the search result component would call refer to its great grandparent to emit the event like so:
+However, the event had to be emitted from a direct child of the root app.  So the search result component would refer to its great grandparent to emit the event:
+
 `this.$parent.$parent.$parent.emit['clickedSearchResult', place]`
+
 This was clearly a poor and unscalable way to communicate between components.
-One way to solve it would be to use a global event bus so that the search result could emit an event directly to the google map to create the corresponding marker.
-However, my understanding is that global event buses are considered bad practice.  
-I tried having the result component receive the method from the root app that tells the google map to create the marker using the provide/inject syntax.  This works and is a little less messy,
-but is also somewhat confusing because a method at the root app is being called from a deeply nested component, so the logic is in an unexpected place.
-I finally settled on creating a watcher at the app level that detects when the searchResult updates the state in store.js.  When the current place changes, the app detects that and calls the necessary methods.
+One way to improve this would be to use a global event bus so that the search result could emit an event directly to the google map to create the corresponding marker.
+However, my understanding is that global event buses are considered bad practice, so instead I tried using the provide/inject syntax to allow the Result component call the method that is declared at the root App.  This works, but could be considered even more messy than the previous implementation, because
+it is somewhat confusing that a method at the root app is being called from a deeply nested component.
+I finally settled on having the Search Result update the place in the store, and have the root app watch for that update and then call the appropriate methods.
 I think this is the best solution of the options that I considered because it is the most clear and understandable: it brings all the logic together to the parent, which then calls the appropriate methods in its child components.  
 
 ### Potential Improvements
@@ -78,8 +79,8 @@ but if the application grew to have any more complex features, such as storing u
 The application would also need a backend framework such as Express.js to handle routing and backend logic.
 
 Aside from the major but currently unnecessary architectural improvements, the only improvements that I would make to the app as it is
-are some small improvemts to the styling.  For example, the traffic chart, implemented with chart.js, was a late addition to the details modal
-and was not properly planned for in the details modal design, so the details modal could use a bit of an overhaul to make sure the chart 
+are some small improvements to the styling.  For example, the traffic chart, implemented with chart.js, was a late addition to the details modal
+and was not properly planned for in the rest of the details modal design, so it could use a bit of an overhaul to make sure the chart 
 fits with the rest of the component more reliably and aesthetically.
 
 ### Other notes
