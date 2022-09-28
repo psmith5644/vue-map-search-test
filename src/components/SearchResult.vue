@@ -25,14 +25,12 @@ import {store} from '@/store.js'
         props: {
             place: {}
         },
-        inject: ['goToSearchResult'],
         methods: {
             /**
-             * Calls the injected method from the root app to go to the clicked search result.
+             * Updates the current place, which is watched by the root app.
              */
             clicked() {
                 store.setPlace(this.place)
-                this.goToSearchResult(store.place)
             },
         },
     }

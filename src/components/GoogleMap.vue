@@ -1,4 +1,4 @@
-<!-- Copied from: https://markus.oberlehner.net/blog/using-the-google-maps-api-with-vue/ -->
+<!-- Reference: https://markus.oberlehner.net/blog/using-the-google-maps-api-with-vue/ -->
 
 <template>
     <div class="GMap"></div>
@@ -72,7 +72,7 @@ import {toRaw} from 'vue'
           stylers: [{
             visibility: "off"
           }]
-      }];
+        }];
 
         try {
           this.google = await gmapsInit();

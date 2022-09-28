@@ -1,5 +1,5 @@
 <template>
-  <GoogleMap @clickedMarker="(place) => displayLocationModal(place)" 
+  <GoogleMap @clickedMarker="() => displayLocationModal()" 
     ref="GoogleMap"/>
 
   <SearchBar ref="SearchBar"/> 
@@ -12,6 +12,7 @@
 import GoogleMap from './components/GoogleMap.vue';
 import SearchBar from './components/SearchBar.vue';
 import DetailsModal from './components/DetailsModal.vue';
+import {store} from '@/store'
 
 export default {
   name: 'App',
@@ -22,22 +23,26 @@ export default {
   },
   data() {
     return {
+      store,
       boolDisplayLocationModal: false,
-      place: null,
     }
   },
-  provide() {
-    return {
-      goToSearchResult: this.goToSearchResult
+  computed: {
+    place() {
+      return this.store.place;
     }
   },
+  watch: {
+    place(newPlace) {
+      this.goToSearchResult(newPlace);
+    }
+  },  
   methods: {
     /**
      * Displays the details modal for the given place
      * @param {Object} place - all data about a place 
      */
-    displayLocationModal(place) {
-      this.place = place;
+    displayLocationModal() {
       this.boolDisplayLocationModal = true;
     },
     /**
