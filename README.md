@@ -29,9 +29,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 For this test, I used the Vue CLI to create a Vue.js Single Page Application.  
 I've never used Vue before, so I was excited to learn a new framework!
-I initially started configuring an Express server and adding Vue on top of it
-before realizing the backend was unnecessary, and the simplest configuration was to 
-let the Vue CLI handle setting up the SPA.
 
 I used Bootstrap's stylesheet to help with the CSS of a few elements, although I did the majority of it manually.
 Initially, I thought using Bootstrap would trivialize the test, 
