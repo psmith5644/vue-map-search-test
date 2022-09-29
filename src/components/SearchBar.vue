@@ -3,7 +3,7 @@
         
         <form @submit.prevent="onSubmit" class="d-flex" role="search" id="searchForm">
 
-            <input v-model="store.searchQuery" id="searchInput" @keyup.enter="onSubmit"
+            <input v-model="store.searchQuery" id="searchInput" @keyup.enter="onSubmit()"
             class="form-control shadow-none" type="search" placeholder="Search..." aria-label="Search"
             name="field" autocomplete="off" ref="SearchBarInput"/>
         </form>
@@ -35,7 +35,7 @@ import {store} from '@/store.js';
             const filteredResults = this.$refs.ResultsDisplay.filteredResults;
             for (const result of filteredResults) {
                 if (result.name.toLowerCase() == this.store.searchQuery.toLowerCase().trim()) {
-                    this.$parent.goToSearchResult(result);
+                    this.store.setPlace(result);
                 }
             }
         },
