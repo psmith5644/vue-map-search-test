@@ -153,9 +153,6 @@ import TrafficChart from './TrafficChart.vue';
         padding: 8px;
         text-align: left;
         color: black;
-        display: flex;
-        flex-direction: column;
-        justify-content: end;
     }
 
     #detailsTitle {
